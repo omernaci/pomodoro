@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Typography, Table, Menu } from "antd";
+import { Button, Typography, Table, Menu, Progress } from "antd";
 import {
   PlayCircleOutlined,
   PauseCircleOutlined,
@@ -7,6 +7,7 @@ import {
 } from "@ant-design/icons";
 
 const { Title } = Typography;
+const twoColors = { "0%": "#108ee9", "100%": "#87d068" };
 
 const PomodoroApp = () => {
   const [minutes, setMinutes] = useState(25);
@@ -28,18 +29,26 @@ const PomodoroApp = () => {
         } else {
           clearInterval(intervalId);
           if (isBreakTime) {
-            // Handle break time logic here
             setHistory((prevHistory) => [
               ...prevHistory,
-              { type: "Break", duration: 5 },
+              {
+                title: "Break Session",
+                duration: 5,
+              },
             ]);
+            setIsBreakTime(false);
+            setMinutes(25);
+            setSeconds(0);
           } else {
             setIsBreakTime(true);
-            setMinutes(5); // Set break time to 5 minutes
+            setMinutes(5);
             setSeconds(0);
             setHistory((prevHistory) => [
               ...prevHistory,
-              { type: "Pomodoro", duration: 25 },
+              {
+                title: "Pomodoro Session",
+                duration: 25,
+              },
             ]);
           }
         }
@@ -64,13 +73,14 @@ const PomodoroApp = () => {
     setIsBreakTime(false);
     setMinutes(25);
     setSeconds(0);
+    setHistory([]);
   };
 
   const columns = [
     {
       title: "Type",
-      dataIndex: "type",
-      key: "type",
+      dataIndex: "title",
+      key: "title",
     },
     {
       title: "Duration",
@@ -78,6 +88,9 @@ const PomodoroApp = () => {
       key: "duration",
     },
   ];
+
+  const totalSeconds = minutes * 60 + seconds;
+  const progress = (totalSeconds / (isBreakTime ? 300 : 1500)) * 100;
 
   return (
     <div>
@@ -88,6 +101,7 @@ const PomodoroApp = () => {
         {minutes.toString().padStart(2, "0")}:
         {seconds.toString().padStart(2, "0")}
       </Title>
+      <Progress percent={progress} showInfo={false} strokeColor={twoColors} />
       <div style={{ marginBottom: "1rem" }}>
         {isRunning ? (
           <Button icon={<PauseCircleOutlined />} onClick={stopTimer}>
