@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Button, Typography, Table, Menu, Progress } from "antd";
+import Quotes from "./components/Quotes";
+import { Button, Typography, Table, Progress } from "antd";
 import {
   PlayCircleOutlined,
   PauseCircleOutlined,
@@ -94,9 +95,10 @@ const PomodoroApp = () => {
 
   return (
     <div>
-      <Menu mode="horizontal" theme="dark" style={{ marginBottom: "1rem" }}>
-        <Menu.Item key="1">Pomodoro App</Menu.Item>
-      </Menu>
+      <div className="navbar">
+        <h1>Pomodoro App</h1>
+      </div>
+      <Quotes />
       <Title level={2}>
         {minutes.toString().padStart(2, "0")}:
         {seconds.toString().padStart(2, "0")}
@@ -121,6 +123,20 @@ const PomodoroApp = () => {
         </Button>
       </div>
       <Table columns={columns} dataSource={history} />
+
+      <style>{`
+        .navbar {
+          background: linear-gradient(to right, ${twoColors["0%"]}, ${twoColors["100%"]});
+          padding: 1rem;
+          text-align: center;
+        }
+
+        .navbar h1 {
+          margin: 0;
+          font-size: 1.5rem;
+          color: white;
+        }
+      `}</style>
     </div>
   );
 };
